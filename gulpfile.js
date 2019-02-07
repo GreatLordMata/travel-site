@@ -23,7 +23,7 @@ gulp.task('styles', function() {
 });
 
 gulp.task('watch', function() {
-
+  notify: false,
   browserSync.init({
     server: {
       baseDir: "app"
@@ -31,10 +31,15 @@ gulp.task('watch', function() {
   });
 
   watch('./app/index.html', function() {
-    gulp.start('html')
+    browserSync.reload();
   });
 
   watch('./app/assets/styles/**/*.css', function() {
-    gulp.start('styles');
+    gulp.start('cssInject');
   });
+});
+
+gulp.task('cssInject', ['styles'], ()=> {
+  return gulp.src('./app/temp/styles/styles.css')
+    .pipe(browserSync.stream());
 });
